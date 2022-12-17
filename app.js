@@ -1,7 +1,5 @@
-const fs = require('fs/promises')
 const express = require('express');
-const {response, urlencoded} = require("express");
-const path = require("path");
+const { fileServices } = require("./services");
 
 const app = express();
 
@@ -9,18 +7,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get('/users', async (req, res) => {
-    const buffer = await fs.readFile(path.join(__dirname, 'dataBase', 'users.json'));
+    const users = await fileServices.reader();
 
-    const users = JSON.parse(buffer.toString());
     res.json(users);
 });
 
 app.get('/users/:userId', async (req, res) => {
     const { userId } = req.params;
-
-    const buffer = await fs.readFile(path.join(__dirname, 'dataBase', 'users.json'));
-
-    const users = JSON.parse(buffer.toString());
+    const users = await fileServices.reader();
 
     const user = users.find((u) => u.id === +userId);
 
@@ -34,6 +28,8 @@ app.get('/users/:userId', async (req, res) => {
 app.post('/users', async (req, res) => {
     const userInfo = req.body;
 
+    const users = await fileServices.reader();
+
     if (userInfo.name.length < 3 || typeof userInfo.name !== 'string') {
         return res.status(400).json('Wrong name');
     }
@@ -42,19 +38,16 @@ app.post('/users', async (req, res) => {
         return res.status(400).json('Wrong age');
     }
 
-    const buffer = await fs.readFile(path.join(__dirname, 'dataBase', 'users.json'));
-
-    const users = JSON.parse(buffer.toString());
 
     const newUser = {
         name: userInfo.name,
         age: userInfo.age,
-        id: users[users.length -1].id +1
+        id: users[users.length - 1].id + 1
     };
 
     users.push(newUser);
 
-    await fs.writeFile(path.join(__dirname, 'dataBase', 'users.json'), JSON.stringify(users));
+    await fileServices.writer(users);
 
     res.status(201).json(newUser)
 });
@@ -63,8 +56,7 @@ app.put('/users/:userId', async (req, res) => {
     const newUserInfo = req.body;
     const {userId} = req.params;
 
-    const buffer = await fs.readFile(path.join(__dirname, 'dataBase', 'users.json'));
-    const users = JSON.parse(buffer.toString());
+    const users = await fileServices.reader();
 
     const index = users.findIndex((u) => u.id === +userId);
 
@@ -74,16 +66,15 @@ app.put('/users/:userId', async (req, res) => {
 
     users[index] = { ...users[index], ...newUserInfo };
 
-    await fs.writeFile(path.join(__dirname, 'dataBase', 'users.json'), JSON.stringify(users));
+    await fileServices.writer(users);
 
     res.status(201).json(users[index]);
 });
 
 app.delete('/users/:userId', async (req, res) => {
-    const {userId} = req.params;
+    const { userId } = req.params;
 
-    const buffer = await fs.readFile(path.join(__dirname, 'dataBase', 'users.json'));
-    const users = JSON.parse(buffer.toString());
+    const users = await fileServices.reader();
 
     const index = users.findIndex((u) => u.id === +userId);
 
@@ -93,15 +84,15 @@ app.delete('/users/:userId', async (req, res) => {
 
     users.splice(index, 1);
 
-    await fs.writeFile(path.join(__dirname, 'dataBase', 'users.json'), JSON.stringify(users));
+    await fileServices.writer(users);
 
     res.sendStatus(204);
 });
 
-// app.get('/', (req, res) => {
-//     res.json('welocme')
-// })
+app.get('/', (req, res) => {
+    res.json('welcome')
+})
 
 app.listen(5000, () => {
     console.log('Server listen 5000')
-})
+});
