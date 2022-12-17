@@ -1,5 +1,6 @@
 const express = require('express');
-const { fileServices } = require("./services");
+
+const { fileServices } = require('./services');
 
 const app = express();
 
@@ -16,7 +17,7 @@ app.get('/users/:userId', async (req, res) => {
     const { userId } = req.params;
     const users = await fileServices.reader();
 
-    const user = users.find((u) => u.id === +userId);
+    const user = users.find((user) => user.id === +userId);
 
     if (!user) {
         return res.status(404).json(`User with id${userId} not found`)
@@ -26,24 +27,24 @@ app.get('/users/:userId', async (req, res) => {
 });
 
 app.post('/users', async (req, res) => {
-    const userInfo = req.body;
+    const { name, age } = req.body;
 
     const users = await fileServices.reader();
 
-    if (userInfo.name.length < 3 || typeof userInfo.name !== 'string') {
+    if (!name || name.length < 3 || typeof name !== 'string') {
         return res.status(400).json('Wrong name');
     }
 
-    if (userInfo.age < 0 || Number.isNaN(+userInfo.age)) {
+    if (!age || age < 18 || Number.isNaN(age)) {
         return res.status(400).json('Wrong age');
     }
 
 
     const newUser = {
-        name: userInfo.name,
-        age: userInfo.age,
-        id: users[users.length - 1].id + 1
-    };
+        id: users[users.length - 1].id + 1,
+        name,
+        age,
+     };
 
     users.push(newUser);
 
@@ -54,11 +55,11 @@ app.post('/users', async (req, res) => {
 
 app.put('/users/:userId', async (req, res) => {
     const newUserInfo = req.body;
-    const {userId} = req.params;
+    const { userId } = req.params;
 
     const users = await fileServices.reader();
 
-    const index = users.findIndex((u) => u.id === +userId);
+    const index = users.findIndex((user) => user.id === +userId);
 
     if (index === -1) {
         return res.status(404).json(`User with id${userId} not found`);
@@ -76,7 +77,7 @@ app.delete('/users/:userId', async (req, res) => {
 
     const users = await fileServices.reader();
 
-    const index = users.findIndex((u) => u.id === +userId);
+    const index = users.findIndex((user) => user.id === +userId);
 
     if (index === -1) {
         return res.status(404).json(`User with id${userId} not found`);
