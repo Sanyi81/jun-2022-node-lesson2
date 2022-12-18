@@ -1,36 +1,22 @@
-const userDb = require("../dataBase/users");
 const router = require('express').Router();
 
-router.get('/', (req, res) => {
-    console.log('USERS ENDPOINT');
+const controller = require('../controller/user.controller');
 
-        res.json(userDb);
-})
+const mdlwr = require('../middleware/user.middleware');
 
-router.get('/:userId', (req, res) => {
-    console.log(req.params);
+router.get('/', controller.getAllUsers);
 
-    const { userId } = req.params;
+router.get('/:userId', mdlwr.checkIsUserExist, controller.getUserById);
 
-    res.json(userDb[userId])
-})
+router.put('/:userId', mdlwr.checkIsUserExist, controller.updateUser);
 
-router.post('/', (req, res) => {
-
-    const userInfo = req.body;
-
-    userDb.push(userInfo);
-
-    res.status(201).json('created')
-});
-
-router.put('/:userId', (req, res) => {
-    const newUserInfo = req.body;
-    const userId = req.params.userId;
-
-    userDb[userId] = newUserInfo;
-
-    res.json('updated')});
-
+// router.post('/', (req, res) => {
+//
+//     const userInfo = req.body;
+//
+//     userDb.push(userInfo);
+//
+//     res.status(201).json('created')
+// });
 
 module.exports = router;
