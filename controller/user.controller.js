@@ -1,9 +1,11 @@
-const userDb = require("../dataBase/users");
+const User = require("../dataBase/User");
 
 module.exports = {
-    getAllUsers: (req, res, next) => {
+    getAllUsers: async (req, res, next) => {
         try {
-            res.json(userDb);
+            const users = await User.find({});
+
+            res.json(users);
         } catch (e) {
             next(e)
         }
@@ -11,24 +13,44 @@ module.exports = {
 
     getUserById: (req, res, next) => {
         try {
-            throw new Error('What?');
-
             res.json(req.user);
         } catch (e) {
             next(e)
         }
     },
 
-    updateUser: (req, res, next) => {
+    updateUser: async (req, res, next) => {
         try {
             const newUserInfo = req.body;
             const userId = req.params.userId;
 
-            userDb[userId] = newUserInfo;
+            await User.findByIdAndUpdate(userId, newUserInfo);
 
             res.json('updated')
         } catch (e) {
             next(e)
         }
+    },
+
+    createUser: async (req, res, next) => {
+        try {
+            await User.create(req.body);
+
+            res.json('OK')
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    deleteUserById: async (req, res, next) => {
+        try {
+            await User.deleteOne({ id: req.params.userId });
+
+            res.status(204).send('OK')
+        } catch (e) {
+            next(e);
+        }
     }
 };
+
+
