@@ -17,5 +17,27 @@ module.exports = {
         } catch (e) {
             next(e);
         }
+    },
+
+    checkIsEmailUnique: async (req, res, next) => {
+        try {
+            const { email } = req.body;
+
+            if (!email) {
+                throw new ErrorApi('Email not present', 400);
+            }
+
+            const user = await User.findOne({ email });
+
+            if (user) {
+                throw new ErrorApi('User with email already exists', 409);
+            }
+
+            req.user = user;
+
+            next();
+        } catch (e) {
+            next(e);
+        }
     }
 }
