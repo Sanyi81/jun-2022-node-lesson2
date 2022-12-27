@@ -1,4 +1,4 @@
-const {carService} = require("../service");
+const { carService } = require("../service");
 const ErrorApi = require("../error/errorAPI");
 module.exports = {
     checkIsCarExist: async (req, res, next) => {
