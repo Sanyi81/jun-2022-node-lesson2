@@ -1,5 +1,4 @@
 const Car = require("../dataBase/Car");
-const User = require("../dataBase/User");
 
 module.exports = {
     findByParams: async (filter = {}) => {

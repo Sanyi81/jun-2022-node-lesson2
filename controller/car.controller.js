@@ -1,4 +1,4 @@
-const { carService, userService} = require("../service");
+const { carService } = require("../service");
 
 module.exports = {
     getAllCars: async (req, res, next) => {
@@ -38,7 +38,7 @@ module.exports = {
 
     createCar: async (req, res, next) => {
         try {
-                       const car = await carService.create(req.body);
+           const car = await carService.create(req.body);
 
             res.status(201).json(car);
         } catch (e) {
