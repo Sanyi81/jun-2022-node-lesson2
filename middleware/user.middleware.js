@@ -1,5 +1,7 @@
 const User = require('../dataBase/User');
-const ErrorApi = require('../error/errorAPI')
+const ErrorApi = require('../error/errorAPI');
+const commonValidator = require('../validators/common.validators');
+const userValidator = require('../validators/user.validator');
 
 module.exports = {
     checkIsUserExist: async (req, res, next) => {
@@ -39,5 +41,49 @@ module.exports = {
         } catch (e) {
             next(e);
         }
+    },
+
+    isNewUserValid: async (req, res, next) => {
+        try {
+            let validate = userValidator.newUserValidator.validate(req.body);
+
+            if (validate.error) {
+                throw new ErrorApi(validate.error.message, 400)
+            }
+
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    isEditUserValid: async (req, res, next) => {
+        try {
+            let validate = userValidator.editUserValidator.validate(req.body);
+
+            if (validate.error) {
+                throw new ErrorApi(validate.error.message, 400)
+            }
+
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    isUserIdValid: async (req, res, next) => {
+        try {
+            const { userId } = req.params;
+
+            const validate = commonValidator.idValidator.validate(userId);
+
+            if (validate.error) {
+                throw new ErrorApi(validate.error.message, 400)
+            }
+
+            next();
+        } catch (e) {
+            next(e);
+        }
     }
-}
+};
