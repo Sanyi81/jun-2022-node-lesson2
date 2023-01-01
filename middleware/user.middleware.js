@@ -1,7 +1,7 @@
 const User = require('../dataBase/User');
 const ErrorApi = require('../error/errorAPI');
-const commonValidator = require('../validators/common.validators');
-const userValidator = require('../validators/user.validator');
+const commonValidator = require('../validator/common.validators');
+const userValidator = require('../validator/user.validator');
 
 module.exports = {
     checkIsUserExist: async (req, res, next) => {

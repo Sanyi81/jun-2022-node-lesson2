@@ -3,6 +3,7 @@ require('dotenv').config();
 const mongoose = require("mongoose");
 
 const userRouter = require('./router/user.router');
+const authRouter = require('./router/auth.router')
 const configs = require('./config/config')
 
 
@@ -14,6 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 
 mongoose.set('strictQuery', true);
 
+app.use('/auth', authRouter)
 app.use('/users', userRouter);
 
 app.get('/', (req, res) => {
