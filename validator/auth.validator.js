@@ -4,7 +4,7 @@ const regexp = require("../config/regex.enamp");
 
 module.exports = {
     loginValidator: Joi.object({
-        email: Joi.string().regex(regexp.EMAIL).lowercase().trim(),
+        email: Joi.string().regex(regexp.EMAIL).lowercase().trim().required(),
         password: Joi.string().regex(regexp.PASSWORD).required(),
     })
 }

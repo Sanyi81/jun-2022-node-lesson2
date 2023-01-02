@@ -1,5 +1,5 @@
 const User = require("../dataBase/User");
-const oauthService = require("../sevice/oauth.service");
+const oauthService = require("../service/oauth.service");
 
 module.exports = {
     getAllUsers: async (req, res, next) => {

@@ -4,10 +4,11 @@ const commonValidator = require('../validator/common.validators');
 const userValidator = require('../validator/user.validator');
 
 module.exports = {
-    checkIsUserExist: async (req, res, next) => {
+    getUserDynamically: (fieldName, from = 'body', dbField) => async (req, res, next) => {
         try {
-            const {userId} = req.params;
-            const user = await User.findById[userId];
+            const fieldToSearch = req[from][fieldName];
+
+            const user = await User.findOne({[dbField]: fieldToSearch});
 
             if (!user) {
                 throw new ErrorApi('User not found', 404);
