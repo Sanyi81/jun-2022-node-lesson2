@@ -3,8 +3,7 @@ const ErrorAPI = require("../error/errorAPI");
 module.exports = {
     isBodyValid: async (req, res,next) => {
         try {
-
-           let validate = authValidator.loginValidator.validate(req.body);
+           const validate = authValidator.loginValidator.validate(req.body);
 
            if (validate.error) {
                throw new ErrorAPI(validate.error.message);
