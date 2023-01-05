@@ -5,12 +5,30 @@ module.exports = {
         return User.find(filter);
     },
 
-    create: async (userInfo) => {
-      return User.create(userInfo);
-    },
-
     findOneByParams: async (filter = {}) => {
         return User.findOne(filter);
+    },
+
+    findByIdWithCars: async (userId) => {
+        return User.aggregate([
+            {
+                $match: {
+                    _id: userId
+                }
+            },
+            {
+                $lookup: {
+                    from: 'cars',
+                    localField: '_id',
+                    foreignField: 'user',
+                    as: 'cars',
+                }
+            }
+        ]);
+    },
+
+    create: async (userInfo) => {
+        return User.create(userInfo);
     },
 
     updateOne: async (userId, newInfo) => {
