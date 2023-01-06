@@ -4,7 +4,7 @@
     "name": "Oleksandr Skyhar"
   },
   "scripts": {
-    "dev": "nodemon app.js"
+    "dev": "echo \"Hello smart\" && nodemon app.js"
   },
   "version": "1.0",
   "dependencies": {
