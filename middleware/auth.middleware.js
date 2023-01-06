@@ -1,5 +1,9 @@
 const authValidator = require("../validator/auth.validator");
 const ErrorAPI = require("../error/errorAPI");
+const oauthService = require("../service/oauth.service");
+const OAuth = require("../dataBase/OAuth")
+const { tokenTypeEnum } = require("../enum");
+
 module.exports = {
     isBodyValid: async (req, res,next) => {
         try {
@@ -15,12 +19,42 @@ module.exports = {
         }
     },
 
-    isBodyValid: async (req, res,next) => {
+    checkAccessToken: async (req, res,next) => {
         try {
-            const validate = authValidator.loginValidator.validate(req.body);
+            const accessToken = req.get('Authorization');
 
-            if (validate.error) {
-                throw new ErrorAPI(validate.error.message);
+            if (!accessToken) {
+                throw new ErrorAPI('No token', 401);
+            }
+
+            oauthService.checkToken(accessToken);
+
+            const tokenInfo = await OAuth.findOne({ accessToken });
+
+            if (!tokenInfo) {
+                throw new ErrorAPI('Token is not valid', 401)
+            }
+
+            next();
+        } catch (e) {
+            next(e);
+        }
+    },
+
+    checkRefreshToken: async (req, res,next) => {
+        try {
+            const refreshToken = req.get('Authorization');
+
+            if (!refreshToken) {
+                throw new ErrorAPI('No token', 401);
+            }
+
+            oauthService.checkToken(refreshToken, tokenTypeEnum.refreshToken);
+
+            const tokenInfo = await OAuth.findOne({ refreshToken });
+
+            if (!tokenInfo) {
+                throw new ErrorAPI('Token is not valid', 401)
             }
 
             next();
