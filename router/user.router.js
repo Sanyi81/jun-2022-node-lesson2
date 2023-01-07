@@ -5,7 +5,7 @@ const mdlwr = require('../middleware/user.middleware');
 const authMdlwr = require('../middleware/auth.middleware')
 
 router.get('/', controller.getAllUsers);
-router.post('/', mdlwr.isNewUserValid, mdlwr.checkIsEmailUnique,controller.createUser);
+router.post('/', mdlwr.isNewUserValid, mdlwr.checkIsEmailUnique, controller.createUser);
 
 router.get(
     '/:userId',
@@ -17,10 +17,10 @@ router.get(
 router.put(
     '/:userId',
     mdlwr.isUserIdValid,
-    authMdlwr.checkAccessToken,
     mdlwr.isEditUserValid,
-    mdlwr.getUserDynamically('userId', 'params', '_id')
-    , controller.updateUser
+    authMdlwr.checkAccessToken,
+    mdlwr.getUserDynamically('userId', 'params', '_id'),
+    controller.updateUser
 );
 router.delete(
     '/:userId',

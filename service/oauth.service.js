@@ -2,8 +2,8 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const ErrorAPI = require("../error/errorAPI");
-const {ACCESS_SECRET, REFRESH_SECRET} = require("../config/config");
-const {tokenTypeEnum} = require("../enum");
+const { ACCESS_SECRET, REFRESH_SECRET } = require("../config/config");
+const { tokenTypeEnum } = require("../enum");
 
 module.exports = {
     hashPassword: (password) => bcrypt.hash(password, 10),
@@ -12,8 +12,8 @@ module.exports = {
         const isPasswordSame = await bcrypt.compare(password, hashPassword);
 
         if (!isPasswordSame) {
-            throw new ErrorAPI('Wrong email or password', 400)
-        };
+            throw new ErrorAPI('Wrong email or password', 400);
+        }
     },
 
     generateAccessTokenPair: (dataToSign = {}) => {
@@ -24,7 +24,6 @@ module.exports = {
             accessToken,
             refreshToken
         }
-
     },
 
     checkToken: (token = '', tokenType = tokenTypeEnum.accessToken) => {

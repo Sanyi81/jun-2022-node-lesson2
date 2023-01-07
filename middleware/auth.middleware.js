@@ -19,7 +19,7 @@ module.exports = {
         }
     },
 
-    checkAccessToken: async (req, res,next) => {
+    checkAccessToken: async (req, res, next) => {
         try {
             const accessToken = req.get('Authorization');
 
@@ -41,7 +41,7 @@ module.exports = {
         }
     },
 
-    checkRefreshToken: async (req, res,next) => {
+    checkRefreshToken: async (req, res, next) => {
         try {
             const refreshToken = req.get('Authorization');
 
@@ -57,9 +57,10 @@ module.exports = {
                 throw new ErrorAPI('Token is not valid', 401)
             }
 
+            req.tokenInfo = tokenInfo;
             next();
         } catch (e) {
             next(e);
         }
-    },
-}
+    }
+};

@@ -1,6 +1,6 @@
 const Joi = require("joi");
 
-const regexp = require("../config/regex.enamp");
+const regexp = require("../config/regexp.enum");
 
 module.exports = {
     loginValidator: Joi.object({

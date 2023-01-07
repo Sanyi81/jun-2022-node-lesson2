@@ -1,6 +1,6 @@
 const express = require('express');
-require('dotenv').config();
 const mongoose = require("mongoose");
+require('dotenv').config();
 
 const userRouter = require('./router/user.router');
 const authRouter = require('./router/auth.router')
@@ -10,7 +10,6 @@ const configs = require('./config/config')
 const app = express();
 
 app.use(express.json());
-
 app.use(express.urlencoded({ extended: true }));
 
 mongoose.set('strictQuery', true);
@@ -23,7 +22,6 @@ app.get('/', (req, res) => {
 });
 
 app.use((err, req, res, next) => {
-
     res.status(err.status || 500).json({
         message: err.message || 'Unknown error',
         status: err.status || 500

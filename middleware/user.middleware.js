@@ -8,10 +8,10 @@ module.exports = {
         try {
             const fieldToSearch = req[from][fieldName];
 
-            const user = await User.findOne({[dbField]: fieldToSearch});
+            const user = await User.findOne({ [dbField]: fieldToSearch });
 
             if (!user) {
-                throw new ErrorApi('User not found', 404);
+                throw new ErrorApi('User is not found', 404);
             }
 
             req.user = user;
@@ -27,7 +27,7 @@ module.exports = {
             const { email } = req.body;
 
             if (!email) {
-                throw new ErrorApi('Email not present', 400);
+                throw new ErrorApi('Email is not present', 400);
             }
 
             const user = await User.findOne({ email });
@@ -35,8 +35,6 @@ module.exports = {
             if (user) {
                 throw new ErrorApi('User with email already exists', 409);
             }
-
-            req.user = user;
 
             next();
         } catch (e) {
@@ -52,6 +50,8 @@ module.exports = {
                 throw new ErrorApi(validate.error.message, 400)
             }
 
+            req.body = validate.value;
+
             next();
         } catch (e) {
             next(e);
@@ -65,6 +65,8 @@ module.exports = {
             if (validate.error) {
                 throw new ErrorApi(validate.error.message, 400)
             }
+
+            req.body = validate.value;
 
             next();
         } catch (e) {

@@ -4,11 +4,11 @@ const oauthService = require("../service/oauth.service");
 module.exports = {
     getAllUsers: async (req, res, next) => {
         try {
-            const users = await User.find();
+            const users = await User.find({});
 
             res.json(users);
         } catch (e) {
-            next(e)
+            next(e);
         }
     },
 
@@ -16,7 +16,7 @@ module.exports = {
         try {
             res.json(req.user);
         } catch (e) {
-            next(e)
+            next(e);
         }
     },
 
@@ -29,7 +29,7 @@ module.exports = {
 
             res.json('updated')
         } catch (e) {
-            next(e)
+            next(e);
         }
     },
 
@@ -47,7 +47,7 @@ module.exports = {
 
     deleteUserById: async (req, res, next) => {
         try {
-            await User.deleteOne({ id: req.params.userId });
+            await User.deleteOne({ _id: req.params.userId });
 
             res.status(204).send('OK')
         } catch (e) {
@@ -55,5 +55,3 @@ module.exports = {
         }
     }
 };
-
-
