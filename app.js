@@ -6,7 +6,6 @@ const userRouter = require('./router/user.router');
 const authRouter = require('./router/auth.router')
 const configs = require('./config/config')
 
-
 const app = express();
 
 app.use(express.json());
