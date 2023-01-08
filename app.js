@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 
 mongoose.set('strictQuery', true);
 
-app.use('/auth', authRouter)
+app.use('/auth', authRouter);
 app.use('/users', userRouter);
 
 app.get('/', (req, res) => {

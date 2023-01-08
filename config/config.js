@@ -3,6 +3,6 @@ module.exports = {
     DB_PASSWORD: process.env.DB_PASSWORD || '1234567',
     MONGO_URL: process.env.MONGO_URL || 'mongodb://127.0.0.1/test-project',
 
-    ACCESS_SECRET: process.env.ACCESS_SECRET || 'secretWorld',
-    REFRESH_SECRET: process.env.REFRESH_SECRET || 'secretRefreshWorld'
+    ACCESS_SECRET: process.env.ACCESS_SECRET || 'secretWord',
+    REFRESH_SECRET: process.env.REFRESH_SECRET || 'secretRefreshWord',
 };

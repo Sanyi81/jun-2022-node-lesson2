@@ -38,4 +38,4 @@ module.exports = {
             throw new ErrorAPI('Token is not valid', 401);
         }
     }
-}
+};
