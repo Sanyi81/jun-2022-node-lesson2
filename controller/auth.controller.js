@@ -1,4 +1,5 @@
 const oauthService = require("../service/oauth.service");
+const emailService = require("../service/email.servise")
 const OAuth = require("../dataBase/OAuth");
 
 module.exports = {
@@ -6,11 +7,13 @@ module.exports = {
         try {
             const { user, body } = req;
 
+            await emailService.sendEmail('skyharts2002@gmail.com');
+
             await oauthService.comparePasswords(user.password, body.password);
 
-           const tokenPair = oauthService.generateAccessTokenPair({  id: user._id });
+            const tokenPair = oauthService.generateAccessTokenPair({  id: user._id });
 
-           await OAuth.create({ ...tokenPair, _user_id: user._id })
+            await OAuth.create({ ...tokenPair, _user_id: user._id })
 
             res.json({
                 user,
