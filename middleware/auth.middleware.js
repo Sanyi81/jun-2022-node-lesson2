@@ -35,6 +35,7 @@ module.exports = {
                 throw new ErrorAPI('Token is not valid', 401)
             }
 
+            req.tokenInfo = tokenInfo;
             next();
         } catch (e) {
             next(e);
