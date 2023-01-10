@@ -1,7 +1,12 @@
 const nodemailer = require('nodemailer');
-const { NO_REPLY_EMAIL, NO_REPLY_EMAIL_PASSWORD } = require('../config/config')
+const EmailTemplates = require('email-templates');
+const path = require('path');
+const { NO_REPLY_EMAIL, NO_REPLY_EMAIL_PASSWORD } = require('../config/config');
+const emailTemplates = require('../email-templates');
+const ErrorAPI = require("../error/errorAPI");
 
-const sendEmail = (receiverMail) => {
+
+const sendEmail = async (receiverMail, emailAction, locals = {}) => {
     const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
@@ -10,11 +15,27 @@ const sendEmail = (receiverMail) => {
         }
     });
 
-    transporter.sendMail({
+    const templateInfo = emailTemplates[emailAction];
+
+    if (!templateInfo) {
+        throw new ErrorAPI('Wrong template', 500)
+    }
+
+    const templateRenderer = new EmailTemplates({
+        views: {
+            root: path.join(process.cwd(), 'email-templates')
+        }
+    });
+
+    Object.assign(locals || {}, { frontendURL: 'google.com' })
+
+    const html = await templateRenderer.render(templateInfo.templateName, locals);
+
+    return transporter.sendMail({
         from: 'No reply',
         to: receiverMail,
-        subject: 'Letter theme',
-        html: '<h2>Hello chat</h2>'
+        subject: templateInfo.subject,
+        html
     });
 }
 
