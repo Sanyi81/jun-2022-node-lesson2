@@ -56,15 +56,21 @@ module.exports = {
     },
 
     checkActionToken: (token, actionType) => {
-        let secretWord = '';
+        try {
+            let secretWord = '';
 
-        switch (actionType) {
-            case tokenTypes.CONFIRM_ACCOUNT:
-                secretWord = CONFIRM_ACCOUNT_ACTION_TOKEN_SECRET;
-                break;
-            case tokenTypes.FORGOT_PASSWORD:
-                secretWord = FORGOT_PASSWORD_ACTION_TOKEN_SECRET;
-                break;
+            switch (actionType) {
+                case tokenTypes.CONFIRM_ACCOUNT:
+                    secretWord = CONFIRM_ACCOUNT_ACTION_TOKEN_SECRET;
+                    break;
+                case tokenTypes.FORGOT_PASSWORD:
+                    secretWord = FORGOT_PASSWORD_ACTION_TOKEN_SECRET;
+                    break;
+            }
+
+            jwt.verify(token, secretWord);
+        } catch (e) {
+            throw new ErrorAPI('Token is not valid', 401);
         }
     }
 };
