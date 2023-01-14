@@ -3,16 +3,16 @@ const emailService = require("../service/email.service");
 const ActionToken = require("../dataBase/ActionToken");
 const OAuth = require("../dataBase/OAuth");
 const User = require("../dataBase/User");
-const { WELCOME, FORGOT_PASS} = require("../config/email-action.enum");
-const {FORGOT_PASSWORD} = require("../config/token-action.enum");
-const {FRONTEND_URL} = require("../config/config");
+const { WELCOME, FORGOT_PASS } = require("../config/email-action.enum");
+const { FORGOT_PASSWORD } = require("../config/token-action.enum");
+const { FRONTEND_URL } = require("../config/config");
 
 module.exports = {
     login: async (req, res, next) => {
         try {
             const { user, body } = req;
 
-            await emailService.sendEmail('sashaskyhar@gmail.com', WELCOME, { userName: user.name });
+            await emailService.sendEmail(user.email, WELCOME, { userName: user.name });
 
             await oauthService.comparePasswords(user.password, body.password);
 
@@ -31,7 +31,6 @@ module.exports = {
 
     refresh: async (req, res, next) => {
         try {
-
             const { refreshToken, _user_id } = req.tokenInfo;
 
             await OAuth.deleteOne({ refreshToken });
@@ -74,13 +73,13 @@ module.exports = {
 
     forgotPassword: async (req, res, next) => {
         try {
-            const user = req.user;
+            const { _id, email, name } = req.user;
 
-            const actionToken = oauthService.generateActionToken(FORGOT_PASSWORD, { email: user.email });
+            const actionToken = oauthService.generateActionToken(FORGOT_PASSWORD, { email: email });
             const forgotPassFEUrl = `${FRONTEND_URL}/password/new?token=${actionToken}`; //  дае урлу фронтенд
 
-            await ActionToken.create({ token: actionToken, _user_id: user._id, tokenType: FORGOT_PASSWORD });
-            await emailService.sendEmail('sashaskyhar@gmail.com', FORGOT_PASS, { url: forgotPassFEUrl });
+            await ActionToken.create({ token: actionToken, tokenType: FORGOT_PASSWORD, _user_id: _id });
+            await emailService.sendEmail(email, FORGOT_PASS, { url: forgotPassFEUrl, userName: name });
 
             res.json('OK');
         } catch (e) {

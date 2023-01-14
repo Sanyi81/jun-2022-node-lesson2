@@ -14,10 +14,8 @@ module.exports = {
         }
     },
 
-    getUserById: async (req, res, next) => {
+    getUserById: (req, res, next) => {
         try {
-            await emailService.sendEmail('sashaskyhar@gmail.com', FORGOT_PASS);
-
             res.json(req.user);
         } catch (e) {
             next(e);

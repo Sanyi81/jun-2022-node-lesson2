@@ -2,7 +2,12 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const ErrorAPI = require("../error/errorAPI");
-const { ACCESS_SECRET, REFRESH_SECRET, CONFIRM_ACCOUNT_ACTION_TOKEN_SECRET, FORGOT_PASSWORD_ACTION_TOKEN_SECRET} = require("../config/config");
+const {
+    ACCESS_SECRET,
+    REFRESH_SECRET,
+    CONFIRM_ACCOUNT_ACTION_TOKEN_SECRET,
+    FORGOT_PASSWORD_ACTION_TOKEN_SECRET
+} = require("../config/config");
 const { tokenTypeEnum } = require("../enum");
 const tokenTypes = require("../config/token-action.enum");
 

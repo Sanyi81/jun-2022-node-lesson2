@@ -4,11 +4,10 @@ const path = require('path');
 const { NO_REPLY_EMAIL, NO_REPLY_EMAIL_PASSWORD, FRONTEND_URL} = require('../config/config');
 const emailTemplates = require('../email-templates');
 const ErrorAPI = require("../error/errorAPI");
-const {options} = require("joi");
 
-
-const sendEmail = async (receiverMail, emailAction, locals = {}) => {
+const sendEmail = async (receiverMail, emailAction, context = {}) => {
     const transporter = nodemailer.createTransport({
+        from: 'No reply',
         service: 'gmail',
         auth: {
             user: NO_REPLY_EMAIL,
@@ -18,7 +17,7 @@ const sendEmail = async (receiverMail, emailAction, locals = {}) => {
 
     const templateInfo = emailTemplates[emailAction];
 
-    if (!templateInfo) {
+    if (!templateInfo?.subject || !templateInfo.templateName) {
         throw new ErrorAPI('Wrong template', 500)
     }
 
@@ -28,17 +27,19 @@ const sendEmail = async (receiverMail, emailAction, locals = {}) => {
             layoutsDir: path.join(process.cwd(), 'email-templates', 'layouts'),
             partialsDir: path.join(process.cwd(), 'email-templates', 'partials'),
             extname: '.hbs'
-        }
+        },
+        extName: '.hbs',
+        viewPath: path.join(process.cwd(), 'email-templates', 'views')
     }
 
-    transporter.use('', hbs(options));
-
-    locals.frontendURL = FRONTEND_URL;
+    transporter.use('compile', hbs(options));
+    context.frontendURL = FRONTEND_URL;
 
     return transporter.sendMail({
-        from: 'No reply',
         to: receiverMail,
         subject: templateInfo.subject,
+        template: templateInfo.templateName,
+        context,
     });
 }
 
