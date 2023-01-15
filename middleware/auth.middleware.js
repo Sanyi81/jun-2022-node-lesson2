@@ -2,11 +2,11 @@ const ActionToken = require("../dataBase/ActionToken");
 const OAuth = require("../dataBase/OAuth");
 const authValidator = require("../validator/auth.validator");
 const oauthService = require("../service/oauth.service");
+const OldPassword = require("../dataBase/OldPassword");
 const ErrorAPI = require("../error/errorAPI");
 const { tokenTypeEnum } = require("../enum");
-const emailService = require("../service/email.service");
-const { FORGOT_PASS } = require("../config/email-action.enum");
 const { FORGOT_PASSWORD } = require("../config/token-action.enum");
+const { compareOldPasswords } = require("../service/oauth.service");
 
 module.exports = {
     isBodyValid: async (req, res,next) => {
@@ -95,4 +95,27 @@ module.exports = {
             next(e);
         }
     },
+
+    checkOldPasswords: async (req, res, next) => {
+        try {
+            const { user, body } = req;
+            const oldPasswords = await OldPassword.find({ _user_id: user._id }).lean();
+
+            if (!oldPasswords.length) {
+                return next();
+            }
+
+            const results = await Promise.all(oldPasswords.map(async (record) => compareOldPasswords(record.password, body.password)));
+
+            const condition = results.some((res) => res);
+
+            if (condition) {
+                throw new ErrorAPI('This password is old, use another password', 409);
+            }
+
+            next();
+        } catch (e) {
+            next(e);
+        }
+    }
 };
