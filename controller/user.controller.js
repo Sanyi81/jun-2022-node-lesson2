@@ -53,5 +53,14 @@ module.exports = {
         } catch (e) {
             next(e);
         }
-    }
+    },
+
+    uploadAvatar: (req, res, next) => {
+        try {
+
+            res.json('OK');
+        } catch (e) {
+            next(e);
+        }
+    },
 };

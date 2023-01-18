@@ -28,5 +28,11 @@ router.delete(
     authMdlwr.checkAccessToken,
     controller.deleteUserById
 );
+router.patch(
+    '/:userId/avatar',
+    mdlwr.isUserIdValid,
+    mdlwr.getUserDynamically('userId', 'params', '_id'),
+    controller.uploadAvatar
+    )
 
 module.exports = router;

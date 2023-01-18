@@ -5,6 +5,7 @@ const userSchema = new Schema({
     name: {type: String, required: true, default: ''},
     email: { type: String, required: true, trim: true, lowercase: true, unique: true },
     password: { type: String },
+    avatar: String,         // якщо у нас тільки одф опція. Якщо більше, ставимо душки і т.д.
     phone: { type: String, required: true },
     age: {type: Number, default: 18}
 }, {

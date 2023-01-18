@@ -10,6 +10,7 @@
     "name": "Oleksandr Skyhar"
   },
   "dependencies": {
+    "aws-sdk": "^2.1296.0",
     "bcrypt": "^5.1.0",
     "cron": "^2.2.0",
     "dayjs": "^1.11.7",
