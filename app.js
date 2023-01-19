@@ -1,4 +1,5 @@
 const express = require('express');
+const fileUpload = require('express-fileupload')
 const swaggerUi = require('swagger-ui-express');
 const mongoose = require("mongoose");
 require('dotenv').config();
@@ -16,6 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 
 mongoose.set('strictQuery', true);
 
+app.use(fileUpload());
 app.use('/auth', authRouter);
 app.use('/users', userRouter);
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerJson));

@@ -1,7 +1,5 @@
 const User = require("../dataBase/User");
-const oauthService = require("../service/oauth.service");
-const emailService = require("../service/email.service");
-const { FORGOT_PASS } = require("../config/email-action.enum");
+const s3Service = require("../service/s3.service");
 
 module.exports = {
     getAllUsers: async (req, res, next) => {
@@ -55,10 +53,13 @@ module.exports = {
         }
     },
 
-    uploadAvatar: (req, res, next) => {
+    uploadAvatar: async (req, res, next) => {
         try {
+            const uploadedData = await s3Service.uploadPublicFile(req.files.avatar, 'user', req.user._id);
 
-            res.json('OK');
+            const updatedUser = await User.findByIdAndUpdate(req.user._id, { avatar: uploadedData.Location }, { new: true });
+
+            res.json(updatedUser);
         } catch (e) {
             next(e);
         }

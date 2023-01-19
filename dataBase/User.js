@@ -16,7 +16,7 @@ const userSchema = new Schema({
 
 userSchema.virtual('fullName').get(function () {
     return `${this.name} Skyhar`
-})
+});
 
 userSchema.statics = {          // for schema // this = MODEL
     testStatic() {
