@@ -7,12 +7,19 @@ module.exports = {
         let findObj = {};
 
         if(name) {
-            findObj = {
-                ...findObj,
-                name: { $regex: name }
-            }
+            findObj = { ...findObj, name: new RegExp(name)
+            };
         }
 
-        return User.find(findObj).limit(limit).skip((page - 1) * limit);
+       const [users, count] = await Promise.all([
+        User.find(findObj).limit(limit).skip((+page - 1) * limit),
+        User.count(findObj)
+        ])
+
+        return {
+            users,
+            page: +page,
+            count
+        }
     }
-}
+};
