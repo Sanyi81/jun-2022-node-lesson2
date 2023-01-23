@@ -1,3 +1,4 @@
+const http = require('http');
 const express = require('express');
 const fileUpload = require('express-fileupload')
 const swaggerUi = require('swagger-ui-express');
@@ -11,6 +12,7 @@ const { cronRunner } = require("./cron");
 const swaggerJson = require('./swagger.json')
 
 const app = express();
+const server = http.createServer(app);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -33,7 +35,7 @@ app.use((err, req, res, next) => {
     });
 });
 
-app.listen(configs.PORT, async () => {
+server.listen(configs.PORT, async () => {
     await mongoose.connect(configs.MONGO_URL);
     console.log(`Server listen ${configs.PORT}`);
     cronRunner();
