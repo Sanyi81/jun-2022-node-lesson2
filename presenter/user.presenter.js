@@ -1,17 +1,29 @@
     const normalize = (user) => {
-    user = user.toJSON();
+    // user = user.toJSON(); - it's use with 1-th variant
 
-        const arr = [
-            'password',
-            '__v',
-            '_id'
-        ];
 
-        arr.forEach(field => {
-            delete user[field];
-        })
+        // - 1-th variant, not very good -
+        // const arr = [
+        //     'password',
+        //     '__v',
+        //     '_id'
+        // ];
+        //
+        // arr.forEach(field => {
+        //     delete user[field];
+        // })
 
-        return user;
+        // - 2d variant, better than the 1-th, more correct -
+
+
+
+        return {
+            name: user.name,
+            email: user.email,
+            age: user.age,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt
+        };
     };
 
     const normalizeMany = (users) => {
