@@ -1,4 +1,5 @@
 const http = require('http');
+const socketIO = require('socket.io');
 const express = require('express');
 const fileUpload = require('express-fileupload')
 const swaggerUi = require('swagger-ui-express');
@@ -20,6 +21,38 @@ app.use(express.urlencoded({ extended: true }));
 mongoose.set('strictQuery', true);
 
 app.use(fileUpload());
+
+
+const io = socketIO(server, { cors: 'http://localhost:80' });
+
+io.on('connection', (socket) => {
+    console.log(socket.id);
+
+    console.log(socket.handshake.auth);
+    console.log(socket.handshake.query);
+
+    // socket.on('I_am_connected', (data) => {
+    //     console.log(data);
+    // });
+
+    // socket.emit('message:new', { message: 'Hello people' })
+
+    socket.on('message:send', (messageData) => {
+        console.log(messageData.text);
+
+        // Send event one to one
+        // socket.emit('message:new', messageData.text)
+
+        // Send event to all except emitter
+        // socket.broadcast.emit('message:new', messageData.text)
+
+// send event to all clients (with emitter)
+        io.emit('message:new', messageData.text);
+
+        io.to(socket.id).emit('test')
+    })
+})
+
 app.use('/auth', authRouter);
 app.use('/users', userRouter);
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerJson));
