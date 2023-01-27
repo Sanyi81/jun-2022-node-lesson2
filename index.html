@@ -35,9 +35,22 @@
         document.write(text)
     })
 
-  socket.on('message:new', (data) => {
+    socket.on('test', (data) => {
       console.log(data);
-  })
+    });
+
+    socket.on('user:room:join', (userInfo) => {
+        alert(`User ${userInfo} joined to room`);
+    });
+
+        joinRoom1.onclick = () => {
+            socket.emit('room:join', { roomId: 1 })
+        };
+
+        joinRoom2.onclick = () => {
+            socket.emit('room:join', { roomId: 2 })
+        }
+
 </script>
 
 </body>

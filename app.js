@@ -51,7 +51,24 @@ io.on('connection', (socket) => {
 
         io.to(socket.id).emit('test')
     })
-})
+
+    socket.on('room:join', (roomInfo)  => {
+        socket.join(roomInfo.roomId); // SOCKET join to room
+        // socket.leave(roomInfo.roomId); // SOCKET leave room
+
+        // send to all in room except new member
+        // socket.to(roomInfo.roomId).emit('user:room:join', socket.id);
+
+        // send to all room members
+        io.to(roomInfo.roomId).emit('user:room:join', socket.id);
+    });
+
+    socket.on('disconnect', () => {
+        console.log(`Socket ${socket.id} was disconnected`)
+    })
+});
+
+
 
 app.use('/auth', authRouter);
 app.use('/users', userRouter);
